@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewPrice;
 
     private Map<String, Double> productPrices;
+    private Map<String, Integer> productQuantities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Ustawienie początkowej wartości
         textViewQuantity.setText("0");
-
-
 
         // Inicjalizacja listy produktów
         List<String> productList = new ArrayList<>();
@@ -60,26 +59,40 @@ public class MainActivity extends AppCompatActivity {
         productAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerProduct.setAdapter(productAdapter);
 
+        // Inicjalizacja mapy ilości produktów
+        productQuantities = new HashMap<>();
+
         // Obsługa przycisku minus
         buttonMinus.setOnClickListener(v -> {
             int currentQuantity = Integer.parseInt(textViewQuantity.getText().toString());
+            String selectedProduct = spinnerProduct.getSelectedItem().toString();
+
             if (currentQuantity > 0) {
                 currentQuantity--;
-                textViewQuantity.setText(String.valueOf(currentQuantity));
-                updateTotalPrice();
+                productQuantities.put(selectedProduct, currentQuantity);
             }
+
+            textViewQuantity.setText(String.valueOf(currentQuantity));
+            updateTotalPrice();
         });
 
         // Obsługa przycisku plus
         buttonPlus.setOnClickListener(v -> {
             int currentQuantity = Integer.parseInt(textViewQuantity.getText().toString());
-            currentQuantity++;
+            String selectedProduct = spinnerProduct.getSelectedItem().toString();
+
+            if (productQuantities.containsKey(selectedProduct)) {
+                currentQuantity = productQuantities.get(selectedProduct) + 1;
+            } else {
+                currentQuantity = 1;
+            }
+
+            productQuantities.put(selectedProduct, currentQuantity);
             textViewQuantity.setText(String.valueOf(currentQuantity));
             updateTotalPrice();
         });
 
-
-// Dodaj obsługę przycisku "buttonOpis"
+        // Obsługa przycisku opisu produktu
         Button buttonOpis = findViewById(R.id.buttonOpis);
         buttonOpis.setOnClickListener(v -> {
             String product = spinnerProduct.getSelectedItem().toString();
@@ -89,18 +102,54 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("productName", product);
             startActivity(intent);
         });
+
+        // Obsługa przycisku "Dalej"
+        buttonNext.setOnClickListener(v -> {
+            String name = editTextName.getText().toString();
+            String product = spinnerProduct.getSelectedItem().toString();
+            int quantity = Integer.parseInt(textViewQuantity.getText().toString());
+            double price = productPrices.get(product);
+            double totalPrice = price * quantity;
+
+            // Przekazanie danych do SummaryActivity
+            Intent intent = new Intent(MainActivity.this, SummaryActivity.class);
+            intent.putExtra("name", name);
+            intent.putExtra("product", product);
+            intent.putExtra("quantity", quantity);
+            intent.putExtra("price", price);
+            intent.putExtra("totalPrice", totalPrice);
+            startActivity(intent);
+        });
+
+        // Ustawienie domyślnego produktu i obliczenie ceny
+        spinnerProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                String selectedProduct = spinnerProduct.getSelectedItem().toString();
+                int currentQuantity = productQuantities.getOrDefault(selectedProduct, 0);
+                textViewQuantity.setText(String.valueOf(currentQuantity));
+                updateTotalPrice();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
     }
 
     private void updateTotalPrice() {
-        String selectedProduct = spinnerProduct.getSelectedItem().toString();
-        int quantity = Integer.parseInt(textViewQuantity.getText().toString());
+        double totalPrice = 0.0;
 
-        if (productPrices.containsKey(selectedProduct)) {
-            double price = productPrices.get(selectedProduct);
-            double totalPrice = price * quantity;
-            textViewPrice.setText("Cena: PLN" + totalPrice);
+        for (Map.Entry<String, Integer> entry : productQuantities.entrySet()) {
+            String product = entry.getKey();
+            int quantity = entry.getValue();
+
+            if (productPrices.containsKey(product)) {
+                double price = productPrices.get(product);
+                totalPrice += price * quantity;
+            }
         }
+
+        textViewPrice.setText("Cena: PLN " + totalPrice);
     }
-
 }
-

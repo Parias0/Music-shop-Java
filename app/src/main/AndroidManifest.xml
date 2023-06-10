@@ -26,6 +26,12 @@
                 android:name=".ProductDescriptionActivity"
                 android:label="Product Description"
                 android:theme="@style/Theme.MusicShop.NoActionBar" />
+        <activity
+                android:name=".SummaryActivity"
+                android:label="Summary"
+                android:theme="@style/Theme.MusicShop.NoActionBar" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

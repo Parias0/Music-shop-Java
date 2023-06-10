@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                tools:context=".SummaryActivity">
+
+    <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+            android:id="@+id/textViewProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewName"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+            android:id="@+id/textViewQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProduct"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewQuantity"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+            android:id="@+id/textViewTotalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewPrice"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+            android:id="@+id/buttonSendEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTotalPrice"
+            android:layout_marginTop="16dp"
+            android:text="Wyślij e-mail"
+    />
+
+
+</RelativeLayout>
