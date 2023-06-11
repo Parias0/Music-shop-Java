@@ -48,7 +48,7 @@ public class SummaryActivity extends AppCompatActivity {
     }
 
     private void sendEmail(String name, String product, int quantity, double totalPrice) {
-        String subject = "Podsumowanie zamówienia";
+        String subject = "Zamówienie z MusicShop";
         String body = "Imię: " + name +
                 "\nProdukt: " + product +
                 "\nIlość: " + quantity +
