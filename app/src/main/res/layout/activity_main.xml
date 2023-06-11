@@ -28,6 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+    <ImageView
+            android:id="@+id/imageViewProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="200dp"
+            android:src="@drawable/default_image" /> <!-- Domyślne zdjęcie -->
+
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +71,7 @@
             android:id="@+id/textViewPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cena: $0.00"
+            android:text="Cena: PLN 0.00"
             android:textSize="18sp"
             android:textStyle="bold"/>
 
@@ -74,10 +82,5 @@
             android:layout_height="wrap_content"
             android:text="Dalej"/>
 
-    <Button
-            android:id="@+id/buttonOpis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Opis"/>
 
 </LinearLayout>

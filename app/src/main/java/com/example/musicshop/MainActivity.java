@@ -1,5 +1,6 @@
 package com.example.musicshop;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerProduct;
     private TextView textViewQuantity;
     private TextView textViewPrice;
+    private ImageView imageViewProduct; // Dodany ImageView
 
     private Map<String, Double> productPrices;
     private Map<String, Integer> productQuantities;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonPlus = findViewById(R.id.buttonPlus);
         Button buttonNext = findViewById(R.id.buttonNext);
         textViewPrice = findViewById(R.id.textViewPrice);
+        imageViewProduct = findViewById(R.id.imageViewProduct); // Dodany ImageView
 
         // Ustawienie początkowej wartości
         textViewQuantity.setText("0");
@@ -54,13 +57,13 @@ public class MainActivity extends AppCompatActivity {
         productPrices.put("Saksofon", 899.99);
         productPrices.put("Mikrofon", 199.99);
 
+        // Inicjalizacja mapy ilości produktów
+        productQuantities = new HashMap<>();
+
         // Konfiguracja ArrayAdapter dla Spinnera
         ArrayAdapter<String> productAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, productList);
         productAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerProduct.setAdapter(productAdapter);
-
-        // Inicjalizacja mapy ilości produktów
-        productQuantities = new HashMap<>();
 
         // Obsługa przycisku minus
         buttonMinus.setOnClickListener(v -> {
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Obsługa przycisku plus
         buttonPlus.setOnClickListener(v -> {
-            int currentQuantity = Integer.parseInt(textViewQuantity.getText().toString());
+            int currentQuantity;
             String selectedProduct = spinnerProduct.getSelectedItem().toString();
 
             if (productQuantities.containsKey(selectedProduct)) {
@@ -92,20 +95,15 @@ public class MainActivity extends AppCompatActivity {
             updateTotalPrice();
         });
 
-        // Obsługa przycisku opisu produktu
-        Button buttonOpis = findViewById(R.id.buttonOpis);
-        buttonOpis.setOnClickListener(v -> {
-            String product = spinnerProduct.getSelectedItem().toString();
-
-            // Przekazanie danych do ProductDescriptionActivity
-            Intent intent = new Intent(MainActivity.this, ProductDescriptionActivity.class);
-            intent.putExtra("productName", product);
-            startActivity(intent);
-        });
-
         // Obsługa przycisku "Dalej"
         buttonNext.setOnClickListener(v -> {
             String name = editTextName.getText().toString();
+
+            if (name.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Wprowadź imię", Toast.LENGTH_SHORT).show();
+                return; // Zatrzymanie działania metody, jeśli imię nie zostało wprowadzone
+            }
+
             String product = spinnerProduct.getSelectedItem().toString();
             int quantity = Integer.parseInt(textViewQuantity.getText().toString());
             double price = productPrices.get(product);
@@ -129,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 int currentQuantity = productQuantities.getOrDefault(selectedProduct, 0);
                 textViewQuantity.setText(String.valueOf(currentQuantity));
                 updateTotalPrice();
+                updateProductImage(selectedProduct); // Dodane wywołanie aktualizacji zdjęcia
             }
 
             @Override
@@ -137,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateTotalPrice() {
         double totalPrice = 0.0;
 
@@ -151,5 +151,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         textViewPrice.setText("Cena: PLN " + totalPrice);
+    }
+
+    private void updateProductImage(String selectedProduct) {
+        int imageResource;
+
+        switch (selectedProduct) {
+            case "Gitara":
+                imageResource = R.drawable.guitar;
+                break;
+            case "Keyboard":
+                imageResource = R.drawable.keyboard;
+                break;
+            case "Perkusja":
+                imageResource = R.drawable.drums;
+                break;
+            case "Saksofon":
+                imageResource = R.drawable.saxophone;
+                break;
+            case "Mikrofon":
+                imageResource = R.drawable.microphone;
+                break;
+            default:
+                imageResource = R.drawable.default_image;
+                break;
+        }
+
+        imageViewProduct.setImageResource(imageResource);
     }
 }
